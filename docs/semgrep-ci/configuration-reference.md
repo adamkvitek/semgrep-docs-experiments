@@ -23,7 +23,7 @@ SEMGREP_RULES="p/security-audit p/secrets"
 
 Most CI providers block pull requests (PRs) or merge requests (MRs) on non-zero exit codes. Semgrep exits with a non-zero exit code (exit code 1) when it reports a blocking finding or there is an issue in running Semgrep (exit code 2 and above). For more information about specific Semgrep exit codes see [CLI reference](../../cli-reference/#exit-codes).
 
-Configure the behavior of Semgrep in CI to suppress blocking findings or internal Semgrep errors blocking your pipeline by using the following options in your YAML configuration file: 
+However, Semgrep in CI can run both in fail open and fail closed states. Configure the behavior of Semgrep in CI to suppress blocking findings or internal Semgrep errors blocking your pipeline by using the following options in your YAML configuration file: 
 
 - `semgrep ci` - Semgrep in CI **fails** on blocking findings, CI **fails** on internal errors.
 - `semgrep ci || [ $? != 1 ]` - Semgrep in CI **fails** on blocking findings, CI **passes** on internal errors.
@@ -116,6 +116,43 @@ To change the job timeout from the default of 1800 seconds. Set to 0 to disable 
 
 ```sh
 SEMGREP_TIMEOUT="300"
+```
+
+## Enabling GitLab MR comments (non-standard CI configuration)
+
+The configuration provided in this section is not needed for a standard Semgrep in CI setup. Use this configuration only when you are using GitLab runners to provide MR comments while you are not using GitLab MR job. In the code snippet below, magenta-colored values are placeholders that you can substitute. Set up the following environment variables within your command line to allow Semgrep to create MR comments in GitLab:
+
+<pre class="language-bash"><code>
+export GITLAB_CI='true'<br/>
+export CI_PROJECT_PATH='<span className="placeholder">USERNAME</span>/<span className="placeholder">PROJECTNAME</span>'<br/>
+export CI_MERGE_REQUEST_PROJECT_URL='https://gitlab.com/<span className="placeholder">USERNAME</span>/<span className="placeholder">PROJECTNAME</span>'<br/>
+export CI_PROJECT_URL="$CI_MERGE_REQUEST_PROJECT_URL"<br/>
+export CI_COMMIT_SHA='<span className="placeholder">COMMIT-SHA-VALUE</span>'<br/>
+export CI_COMMIT_REF_NAME='<span className="placeholder">REF</span>'<br/>
+export CI_MERGE_REQUEST_TARGET_BRANCH_NAME='<span className="placeholder">BRANCH_NAME</span>'<br/>
+export CI_JOB_URL='<span className="placeholder">JOB_URL</span>'<br/>
+export CI_PIPELINE_SOURCE='merge_request_event'<br/>
+export CI_MERGE_REQUEST_IID='<span className="placeholder">REQUEST_IID</span>'<br/>
+export CI_MERGE_REQUEST_DIFF_BASE_SHA='<span className="placeholder">SHA</span>'<br/>
+export CI_MERGE_REQUEST_TITLE='<span className="placeholder">MERGE_REQUEST_TITLE</span>'<br/>
+</code></pre>
+
+Replace magenta-colored placeholders in the code snippet above with your specific values (for example <code><span className="placeholder">USERNAME</span></code>). For more information on all of these variables see GitLab documentation [Predefined variables reference](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html). You can find an exhaustive example with sample values in [List all environment variables](https://docs.gitlab.com/ee/ci/variables/index.html#list-all-environment-variables).
+
+Example with sample values:
+```sh
+export GITLAB_CI='true'
+export CI_PROJECT_PATH="gitlab-org/gitlab-foss"
+export CI_MERGE_REQUEST_PROJECT_URL="https://example.com/gitlab-org/gitlab-foss"
+export CI_PROJECT_URL="$CI_MERGE_REQUEST_PROJECT_URL"
+export CI_COMMIT_SHA="1ecfd275763eff1d6b4844ea3168962458c9f27a"
+export CI_COMMIT_REF_NAME="main"
+export CI_MERGE_REQUEST_TARGET_BRANCH_NAME="main"
+export CI_JOB_URL="https://gitlab.com/gitlab-examples/ci-debug-trace/-/jobs/379424655"
+export CI_PIPELINE_SOURCE='merge_request_event'
+export CI_MERGE_REQUEST_IID="1"
+export CI_MERGE_REQUEST_DIFF_BASE_SHA="1ecfd275763eff1d6b4844ea6874447h694gh23d"
+export CI_MERGE_REQUEST_TITLE="Testing branches"
 ```
 
 <MoreHelp />

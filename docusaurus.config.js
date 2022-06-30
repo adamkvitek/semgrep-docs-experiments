@@ -17,8 +17,8 @@ module.exports = {
     navbar: {
       logo: {
         alt: 'Semgrep logo',
-        src: 'img/semgrep-icon-text-horizontal.svg',
-        srcDark: 'img/semgrep-icon-text-horizontal-dark.svg',
+        src: 'img/semgrep-logo-rainbow.svg',
+        srcDark: 'img/semgrep-logo-rainbow.svg',
         href: 'https://semgrep.dev',
         target: '_self'
       },
@@ -129,11 +129,23 @@ module.exports = {
       facetFilters: [],
       //... other Algolia params
     },
-    image: 'https://semgrep.dev/thumbnail.png'
+    image: 'https://semgrep.dev/thumbnail.png',
+    announcementBar: {
+      id: 'office-hours',
+      content:
+        'Semgrep Weekly Wednesday Office Hours! 🕙 Every Wednesday at 10am PT. <a target="_blank" rel="noopener noreferrer" href="https://get.semgrep.dev/officehours">Save your seat</a> to join us on July 20th!',
+      backgroundColor: '#5F36D9',
+      textColor: '#ffffff',
+      isCloseable: false,
+    },
   },
   scripts: [
     {
       src: 'https://semgrep.dev/docs/fs.js',
+      async: true
+    },
+    {
+      src: '/docs/js/gtm.js',
       async: true
     }
   ],
@@ -150,10 +162,6 @@ module.exports = {
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
-        },
-        googleAnalytics: {
-          trackingID: 'UA-106134149-12',
-          anonymizeIP: true,
         },
         gtag: {
           // You can also use your "G-" Measurement ID here.
@@ -187,10 +195,13 @@ module.exports = {
           { from: "/upgrade", to: "/upgrading/" },
           { from: "/semgrep-ci", to: "/semgrep-ci/overview/" },
           { from: "/sample-ci-configs", to: "/semgrep-ci/sample-ci-configs/" },
-          { from: "/status/", to: "/language-support/" },
+          { from: "/status/", to: "/supported-languages/" },
+          { from: "/language-support/", to: "/supported-languages/" },
           { from: "/ignoring-findings/", to: "/ignoring-files-folders-code/" },
           { from: "/experiments/join-mode/", to: "/experiments/join-mode/overview/" },
-          { from: "/providers/", to: "/semgrep-ci/overview/" }
+          { from: "/providers/", to: "/semgrep-ci/overview/" },
+          { from: "/semgrep-app/role-based-access-control", to: "/semgrep-app/user-management/" },
+          { from: "/cli-usage/", to: "/cli-reference/" }
         ]
       }
     ],
